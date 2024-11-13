@@ -16,7 +16,7 @@ const NavMenu = ({ label, data }) => {
 
   const handleClick = (link) => {
     if (link) {
-      router.push(link);
+      router.push(`${link}`);
     }
     setOpen(false);
   };
@@ -56,7 +56,9 @@ const NavMenu = ({ label, data }) => {
       {/* dropdown content */}
       <div
         className={`${
-          open ? "opacity-100 scale-100" : "opacity-0 scale-50"
+          open
+            ? "opacity-100 scale-100 z-20"
+            : "opacity-0 scale-50 -z-50 invisible"
         } p-3.5 rounded-lg border border-borderLight ease transition-all duration-200 flex flex-col absolute top-12 -left-9 w-64 justify-center items-center bg-[#0F1110]`}
       >
         {data.map((item, index) => (

@@ -1,6 +1,13 @@
 import { FaRegFileCode } from "react-icons/fa6";
 import { HiOutlineDocumentText } from "react-icons/hi";
 import { GrOracle } from "react-icons/gr";
+import { IoHammerOutline } from "react-icons/io5";
+import { FcGallery } from "react-icons/fc";
+import { RxDashboard } from "react-icons/rx";
+
+// ecosystem
+import { VscGithubProject } from "react-icons/vsc";
+import { LuTicket } from "react-icons/lu";
 
 export const navbar = [
   {
@@ -42,11 +49,29 @@ export const ecosystem = [
   {
     label: "Project",
     link: "https://dl.acm.org/doi/10.1145/3548606.3560652",
-    icon: "",
+    icon: VscGithubProject,
   },
   {
     label: "Campaign",
     link: "/zklightclient",
-    icon: "",
+    icon: LuTicket,
+  },
+];
+
+export const usr_menu = [
+  {
+    label: "My NFTs",
+    link: "/mtnft",
+    icon: RxDashboard,
+  },
+  {
+    label: "Gallery",
+    link: "https://dl.acm.org/doi/10.1145/3548606.3560652",
+    icon: FcGallery,
+  },
+  {
+    label: "Create an NFT",
+    link: "/createrTool",
+    icon: IoHammerOutline,
   },
 ];

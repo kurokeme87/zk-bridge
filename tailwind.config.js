@@ -10,10 +10,13 @@ module.exports = {
       colors: {
         primary_bg: "#0D0F0E",
         cyan: "#0CFFA7",
+        cyan2: "#0CFFD3",
+        darkLight: "#151716",
       },
       borderColor: {
         borderLight: "#272928",
-        cyan: "#0CFFA7",
+        cyan: "#0CFFD3",
+        borderGrayLight: "rgba(255, 255, 255, 0.2)",
       },
       fontFamily: {
         poppins: "var(--font-poppins)",
@@ -24,6 +27,8 @@ module.exports = {
       backgroundColor: {
         app_primary_gradient: "var(--background)",
         background: "var(--background)",
+        cyanLight: "#142F2A",
+        lightGray: "rgba(255, 255, 255, 0.1)",
       },
       boxShadow: {
         tab_box: "0px 0px 4px 4px rgba(224,223,223,0.36)",

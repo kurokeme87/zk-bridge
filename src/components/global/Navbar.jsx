@@ -4,19 +4,28 @@ import Image from "next/image";
 import logo from "../../images/zk-logo.svg";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { developers, navbar } from "@/app/lib/data";
+import { developers, ecosystem, navbar } from "@/app/lib/data";
 import NavMenu from "./NavMenu";
-import ZkConnectButton from "../ZkConnectButton";
+import ConnectWalletModal from "../modals/ConnectWalletModal";
+import { CiMenuBurger } from "react-icons/ci";
+import UserMenu from "./UserMenu";
+import { ChainButton, ConnectorButton } from "./AccountButtons";
 
 const Navbar = () => {
   const pathname = usePathname();
   return (
-    <nav className="pl-6 pr-4 pt-6 pb-0 bg-[#0F1110] border-b flex justify-between items-center font-poppins fixed top-0 right-0 left-0 z-20 border-borderLight">
+    <nav className="md:pl-6 md:pr-4 md:pt-6 p-4 md:pb-0 bg-[#0F1110] border-b flex justify-between items-center font-poppins fixed top-0 right-0 left-0 z-20 border-borderLight backdrop-blur-sm">
       <div className="flex justify-start items-center gap-28 w-full font-poppins">
-        <div className="pb-5">
-          <Image src={logo} width={150} height={150} alt="zk broge logo" />
+        <div className="md:pb-5">
+          <Image
+            src={logo}
+            width={150}
+            height={150}
+            className="md:w-[150px] w-24"
+            alt="zk broge logo"
+          />
         </div>
-        <div className="flex justify-start items-center gap-10">
+        <div className="md:flex justify-start items-center gap-4 md:gap-7 lg:gap-10 xl:gap-14 hidden">
           {navbar.map((item, index) => (
             <Link
               key={index}
@@ -38,9 +47,26 @@ const Navbar = () => {
             </Link>
           ))}
           <NavMenu label="Developers" data={developers} />
-          <NavMenu label="Ecosystem" data={developers} />
+          <NavMenu label="Ecosystem" data={ecosystem} />
         </div>
       </div>
+
+      <div className="md:pb-6 px-3">
+        <ChainButton />
+      </div>
+
+      <div className="md:pb-6 px-3">
+        <ConnectorButton />
+      </div>
+
+      <div className="md:pb-6">
+        <ConnectWalletModal />
+      </div>
+      <UserMenu />
+
+      <button className="md:hidden block text-white ml-3 hover:bg-cyan ease transition-all">
+        <CiMenuBurger size={24} />
+      </button>
     </nav>
   );
 };
