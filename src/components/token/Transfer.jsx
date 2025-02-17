@@ -12,6 +12,7 @@ import ReceipientAddressInput from "./ReceipientAddressInput";
 import { UseWallet } from "../useWallet";
 import { useAccount } from "wagmi";
 import { toast } from "react-toastify";
+import { ethers } from "ethers";
 
 const Transfer = () => {
   const [loading, setLoading] = useState(false);
