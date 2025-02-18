@@ -29,3 +29,15 @@ input[type=number] {
   border: 1px solid rgba(255, 255, 255, .1);
   border-radius: 16px;
 }
+
+.animate-img-bg-ethereum {
+  background: linear-gradient(180deg, rgba(12, 255, 167, .08) 0%, rgba(255, 255, 255, 0) 100%);
+  border: 1px solid rgba(255, 255, 255, .1);
+  border-radius: 16px;
+}
+
+.gray-btn {
+  border: 1px solid rgba(255, 255, 255, .1);
+  background: rgba(255, 255, 255, .05);
+
+}

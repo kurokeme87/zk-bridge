@@ -30,6 +30,12 @@ module.exports = {
         cyanLight: "#142F2A",
         lightGray: "rgba(255, 255, 255, 0.1)",
       },
+      backgroundImage: {
+        cyan_light:
+          "url(https://www.zkbridge.com/assets/join-partner-bg-a7a790f9.png)",
+        linear_cyan:
+          "linear-gradient(89.79deg, rgb(12, 255, 240) 0.18%, rgb(12, 255, 167) 99.9%)",
+      },
       boxShadow: {
         tab_box: "0px 0px 4px 4px rgba(224,223,223,0.36)",
       },

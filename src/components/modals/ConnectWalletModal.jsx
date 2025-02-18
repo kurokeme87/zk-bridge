@@ -57,7 +57,7 @@ const ConnectWalletModal = ({ button, actionBtn }) => {
             open
               ? "scale-100 visible z-[9999] opacity-100"
               : "scale-50 opacity-0 invisible -z-[999]"
-          } border border-borderGrayLight px-4 pt-7 pb-10 w-screen max-w-[695px] fixed right-[50%] top-[50%] translate-x-[50%]  ease-in-out transition-all duration-300  bg-darkLight overflow-y-hidden rounded-xl`}
+          } border border-borderGrayLight px-4 pt-7 pb-10 w-screen max-w-[695px] fixed right-[50%] top-[50%] translate-x-[50%] ease-in-out transition-all duration-300  bg-darkLight overflow-y-hidden rounded-xl`}
         >
           <div className="w-full md:p-5 p-2">
             <div className="w-full flex justify-between items-center">
