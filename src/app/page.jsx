@@ -7,13 +7,17 @@ import HeroSection from "@/components/HeroSection";
 import ProvingEthereum from "@/components/ProvingEthereum";
 import Link from "next/link";
 import { HiOutlineExternalLink } from "react-icons/hi";
-import { tokens } from "./lib/tokens";
+// import { tokens } from "./lib/tokens";
 import { supported_chains_img } from "./lib/data";
+import ApplicationUseCases from "@/components/ApplicationUseCases";
+import Advantages from "@/components/Advantages";
+import AnimatedNav from "@/components/global/AnimatedNav";
 
 const Page = () => {
   return (
     <main className="w-full font-poppins">
       <Navbar />
+      <AnimatedNav />
       <HeroSection />
       <section className="min-h-screen h-full relative flex flex-col bg-black py-14 md:py-20">
         <h1 className="font-medium text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-center">
@@ -75,7 +79,7 @@ const Page = () => {
           zkLightClient on LayerZero
         </h1>
 
-        <div className="mx-auto max-w-7xl w-full grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 mt-24">
+        <div className="mx-auto max-w-7xl w-full grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 mt-24 px-7 sm:px-10 md:px-0">
           <img
             className="border animate-img-bg"
             src="https://www.zkbridge.com/assets/home_layerzero-bg-e8b84d4c.gif"
@@ -116,7 +120,7 @@ const Page = () => {
           </div>
         </div>
       </section>
-
+      <Advantages />
       <section className="min-h-screen h-full bg-black py-14 md:py-20 w-full flex flex-col items-center">
         <h1 className="font-medium text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-center">
           Current Supported Networks
@@ -136,6 +140,7 @@ const Page = () => {
       <EcosystemSwiper />
       <ProvingEthereum />
       <EfficientProof />
+      <ApplicationUseCases />
       <BuildWithZkBridge />
       <Footer />
     </main>

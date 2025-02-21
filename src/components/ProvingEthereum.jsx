@@ -3,9 +3,9 @@ import { HiOutlineExternalLink } from "react-icons/hi";
 
 const ProvingEthereum = () => {
   return (
-    <section className="min-h-screen h-full relative flex flex-col bg-black py-14 md:py-20">
+    <section className="min-h-screen h-full relative flex flex-col bg-black py-14 md:pb-20 md:pt-48">
       <h1 className="font-medium text-white text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-center">
-        Efficient Proof systems
+        Proving Ethereum Full Consensus in ZK
       </h1>
 
       <div className="mx-auto max-w-7xl w-full grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 mt-24">

@@ -39,5 +39,22 @@ input[type=number] {
 .gray-btn {
   border: 1px solid rgba(255, 255, 255, .1);
   background: rgba(255, 255, 255, .05);
+}
 
+.gray-border {
+  border: 1px solid rgba(255, 255, 255, .1);
+}
+
+.light-opactiy {
+  display: block;
+  position: absolute;
+  content: "";
+  width: 500px;
+  height: 300px;
+  background: linear-gradient(89.79deg, #0cfff0 .18%, #0cffa7 99.9%);
+  opacity: .2;
+  filter: blur(250px);
+  left: -180px;
+  top: -146px;
+  z-index: 1;
 }
