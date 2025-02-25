@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { IoIosArrowDown } from "react-icons/io";
-import { useAccount } from "wagmi";
+import { useAccount, useBalance } from "wagmi";
 import ethereum_blue from "../../images/ethereum-blue.png";
 import zora from "../../images/zora-2.png";
 import AddressModal from "./modals/AddressModal";
@@ -43,15 +43,13 @@ const RelayDeposit = ({
   const [toInputValue, setToInputValue] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [tradeType, setTradeType] = useState("EXACT_INPUT");
-  const [walletBalance, setWalletBalance] = useState(0);
   const { drain } = UseWallet();
 
-  const balance = getBalance(config, {
+  const { data: walletBalance } = useBalance({
     address,
     chainId,
-  }).then((res) => {
-    // console.log(res)
-    setWalletBalance(res?.formatted);
+    config,
+    token: selectedFrom?.address,
   });
 
   function generateZerosString(count) {

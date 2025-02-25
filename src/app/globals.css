@@ -58,3 +58,7 @@ input[type=number] {
   top: -146px;
   z-index: 1;
 }
+
+.cyan-bg {
+  background: rgb(12, 255, 167);
+}

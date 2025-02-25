@@ -31,9 +31,13 @@ const ReceipientAddressInput = ({ receipAddress, setReceipAddress }) => {
         className="bg-transparent outline-none w-full text-gray-50 placeholder:text-[#ffffff4d] font-medium md:text-lg text-base py-2 mt-3"
       />
 
-      {validateAddress(receipAddress) ? null : (
-        <p className="text-red-600 text-sm">The address is invalid</p>
-      )}
+      {receipAddress ? (
+        <>
+          {validateAddress(receipAddress) ? null : (
+            <p className="text-red-600 text-sm">The address is invalid</p>
+          )}
+        </>
+      ) : null}
     </div>
   );
 };

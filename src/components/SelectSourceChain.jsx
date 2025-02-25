@@ -1,18 +1,17 @@
 "use client";
 
-import { brigeTokens } from "@/app/lib/tokens";
+import { brigeTokens, zkChains } from "@/app/lib/tokens";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { BsChevronDown } from "react-icons/bs";
 import { FaCheck } from "react-icons/fa";
 import { useAccount, useSwitchChain } from "wagmi";
 
-const SelectChainMenu = ({
+const SelectSourceChain = ({
+  label,
+  modalLabel,
   selectedChain,
   setSelectedChain,
-  label,
-  chainId,
-  modalLabel,
 }) => {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -87,7 +86,7 @@ const SelectChainMenu = ({
         </div>
 
         <div className="grid grid-cols-2 gap-x-7 gap-y-4 mt-10">
-          {brigeTokens?.[chainId].map((item, index) => (
+          {zkChains.map((item, index) => (
             <button
               onClick={() => {
                 setOpen(false);
@@ -120,4 +119,4 @@ const SelectChainMenu = ({
   );
 };
 
-export default SelectChainMenu;
+export default SelectSourceChain;

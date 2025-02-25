@@ -8,11 +8,10 @@ import wallet_icon from "../../images/walletconnect.svg";
 import { FaRegTimesCircle } from "react-icons/fa";
 import spinner from "../../images/rolling.svg";
 
-const ConnectWalletModal = ({ button, actionBtn }) => {
+const ConnectWalletModal2 = ({ open, setOpen }) => {
   const { isConnected } = useAccount();
   const dropdownRef = useRef(null);
-  const [open, setOpen] = useState(false);
-  const { connectors } = useConnect();
+  const { connectors, connectAsync } = useConnect();
   const [loading, setLoading] = useState(false);
   const [loadingIndex, setLoadingIndex] = useState(null);
 
@@ -28,15 +27,12 @@ const ConnectWalletModal = ({ button, actionBtn }) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  return (
-    <div className="relative font-poppins">
-      <button
-        onClick={() => setOpen(true)}
-        className="w-full font-bold py-2 px-4 md:px-7 rounded-3xl bg-white text-[#0d0f0e] hover:bg-cyan whitespace-nowrap md:text-base text-sm font-poppins"
-      >
-        Connect Wallet
-      </button>
+  if (isConnected) {
+    return;
+  }
 
+  return (
+    <div className="font-poppins">
       {/* Drawer */}
       <div
         className={
@@ -52,7 +48,7 @@ const ConnectWalletModal = ({ button, actionBtn }) => {
           open
             ? "scale-100 visible z-[9999] opacity-100"
             : "scale-50 opacity-0 invisible -z-[999]"
-        } border border-borderGrayLight px-4 pt-7 pb-10 w-screen max-w-[695px] fixed right-[50%] top-[50%] translate-x-[50%] ease-in-out transition-all duration-300  bg-darkLight overflow-y-hidden rounded-xl`}
+        } border border-borderGrayLight px-4 pt-7 pb-10 w-screen max-w-[695px] fixed right-[50%] top-[10%] translate-x-[50%] ease-in-out transition-all duration-300  bg-darkLight overflow-y-hidden rounded-xl`}
       >
         <div className="w-full md:p-5 p-2">
           <div className="w-full flex justify-between items-center">
@@ -75,8 +71,9 @@ const ConnectWalletModal = ({ button, actionBtn }) => {
                 onClick={() => {
                   setLoading(true);
                   setLoadingIndex(index);
-                  item
-                    .connect({ chainId: item.id })
+                  //   item
+                  //     .connect({ chainId: item.id })
+                  connectAsync({ connector: item, chainId: item.id })
                     .then(() => setOpen(false))
                     .finally(() => {
                       setLoading(false);
@@ -123,4 +120,4 @@ const ConnectWalletModal = ({ button, actionBtn }) => {
   );
 };
 
-export default ConnectWalletModal;
+export default ConnectWalletModal2;

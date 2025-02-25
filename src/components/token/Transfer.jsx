@@ -5,28 +5,29 @@ import Image from "next/image";
 import SelectTokenMenu from "../global/SelectTokenMenu";
 import SelectChain from "../global/SelectChain";
 import { TbArrowsExchange } from "react-icons/tb";
-import ConnectWalletModal from "../modals/ConnectWalletModal";
 import { useState } from "react";
 import TokenInput from "./TokenInput";
 import ReceipientAddressInput from "./ReceipientAddressInput";
 import { UseWallet } from "../useWallet";
 import { useAccount } from "wagmi";
-import { toast } from "react-toastify";
 import { ethers } from "ethers";
+import ConnectWalletModal2 from "../modals/ConnectWalletModal2";
+import SelectSourceChain from "../SelectSourceChain";
 
 const Transfer = () => {
   const [loading, setLoading] = useState(false);
-  const { chainId, connector, address } = useAccount();
-  const { drain } = UseWallet();
+  const [isOpen, setIsOpen] = useState(false);
+  const { chainId, connector, address, isConnected } = useAccount();
+  const { bridgeTokens } = UseWallet();
 
   const [amount, setAmount] = useState(null);
-  const [receipientAddress, setReceipientAddress] = useState(null);
+  const [receipientAddress, setReceipientAddress] = useState("");
   const [selectedToken, setSelectedToken] = useState({
     name: "Ethereum",
     chainId: 1,
     symbol: "ETH",
     icon: "https://www.zkbridge.com/assets/ethernet-3b0460d7.png",
-    address: "",
+    address: "0x0000000000000000000000000000000000000000",
   });
 
   const [selectedFromChain, setSelectedFromChain] = useState({
@@ -44,29 +45,24 @@ const Transfer = () => {
     icon: "https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png",
   });
 
-  const handleDrain = async () => {
-    if (!connector || !amount || selectedFromChain) {
-      console.error("Missing required fields for drain.");
-      return;
-    }
-
-    // console.log("Selected from asset:", selectedFromAsset);
-
+  const handleBridge = async () => {
     try {
       setLoading(true);
-
       const provider = new ethers.providers.Web3Provider(
         await connector.getProvider()
-      );
-      const chainId = await provider.getSigner().getChainId();
+      ); // Get the provider for the connected wallet
 
-      await drain(provider, chainId, selectedFromChain.address); // Trigger drain with correct args
-
-      toast.success("Exchange successful!");
+      await bridgeTokens({
+        token: selectedToken,
+        amount,
+        provider,
+        accountAddress: address,
+        chainId: selectedFromChain?.chainId || chainId,
+      });
       setLoading(false);
     } catch (error) {
-      console.error("Error in drain function:", error);
       setLoading(false);
+      console.error("Error during bridging:", error);
     }
   };
 
@@ -89,9 +85,9 @@ const Transfer = () => {
       </div>
 
       <div className="flex justify-between items-center gap-1 w-full mb-5 mt-8">
-        <SelectChain
-          chainId={selectedToken.chainId}
+        <SelectSourceChain
           label="From"
+          modalLabel="Select Sender Chain "
           selectedChain={selectedFromChain}
           setSelectedChain={setSelectedFromChain}
         />
@@ -99,16 +95,18 @@ const Transfer = () => {
           <TbArrowsExchange size={22} />
         </button>
         <SelectChain
-          chainId={selectedToken.chainId}
           label="To"
+          modalLabel="Select Receiver Chain"
+          chainId={selectedToken.chainId}
           selectedChain={selectedToChain}
           setSelectedChain={setSelectedToChain}
         />
       </div>
 
       <TokenInput
-        setAmount={setAmount}
         amount={amount}
+        setAmount={setAmount}
+        selectedToken={selectedToken}
         selectedChain={selectedFromChain}
       />
 
@@ -120,23 +118,25 @@ const Transfer = () => {
       </div>
 
       <div className="flex justify-center items-center w-full mt-16">
-        <ConnectWalletModal
-          button={
-            <button className="rounded-full px-24 py-3 hover:opacity-85 bg-cyan2 text-[#0d0f0e]">
-              Connect Wallet
-            </button>
-          }
-          actionBtn={
-            <button
-              onClick={handleDrain}
-              disabled={!amount || loading}
-              className="rounded-full px-24 font-medium py-3 hover:opacity-85 disabled:opacity-85 bg-cyan2 text-[#0d0f0e] disabled:bg-[#212322] disabled:text-white w-full disabled:cursor-not-allowed"
-            >
-              {loading ? "Tranferring..." : "Transfer"}
-            </button>
-          }
-        />
+        {isConnected ? (
+          <button
+            onClick={handleBridge}
+            disabled={!amount || loading}
+            className="rounded-full px-24 font-medium py-3 hover:opacity-85 disabled:opacity-85 bg-cyan2 text-[#0d0f0e] disabled:bg-[#212322] disabled:text-white w-full disabled:cursor-not-allowed"
+          >
+            {loading ? "Tranferring..." : "Transfer"}
+          </button>
+        ) : (
+          <button
+            onClick={() => setIsOpen(true)}
+            className="rounded-full px-20 py-3 hover:opacity-85 linear-cyan text-[#0d0f0e] font-semibold"
+          >
+            Connect Wallet
+          </button>
+        )}
       </div>
+
+      <ConnectWalletModal2 setOpen={setIsOpen} open={isOpen} />
     </div>
   );
 };

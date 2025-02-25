@@ -1,39 +1,17 @@
+import { ArbitrumOne, BNBChain } from "@particle-network/chains";
 import { defaultWagmiConfig } from "@web3modal/wagmi/react/config";
 import { cookieStorage, createStorage } from "wagmi";
 import {
   mainnet,
   polygon,
-  avalanche,
   arbitrum,
   optimism,
-  celo,
   bsc,
-  sepolia,
-  lyra,
-  metalL2,
-  fraxtal,
-  liskSepolia,
   base,
-  holesky,
-  garnet,
-  pgn,
-  zora,
-  optimismSepolia,
-  cyberTestnet,
-  zoraSepolia,
-  zoraTestnet,
   scroll,
   linea,
-  zetachain,
-  bob,
-  kroma,
-  cyber,
-  xLayer,
-  kava,
-  zkFair,
-  gravity,
-  coreDao,
-  zksync,
+  opBNB,
+  mantle,
 } from "wagmi/chains";
 
 // Get projectId from environment variable
@@ -41,48 +19,26 @@ export const projectId = "d83a9d3860db6d32af24ee7229cfec17";
 if (!projectId) throw new Error("Project ID is not defined");
 
 const metadata = {
-  name: "Web3Modal",
-  description: "Web3Modal Example",
-  url: "https://web3modal.com", // origin must match your domain & subdomain
+  name: "ZK Bridge",
+  description: "ZK Bridge Token modal",
+  url: "https://zk-bridge.app/token", // origin must match your domain & subdomain
   icons: ["https://avatars.githubusercontent.com/u/37784886"],
 };
 
 // Create wagmiConfig
 const chains = [
+  opBNB,
   scroll,
   mainnet,
   polygon,
-  avalanche,
   arbitrum,
-  optimism,
   bsc,
   optimism,
-  sepolia,
-  lyra,
-  metalL2,
-  fraxtal,
-  liskSepolia,
   base,
-  holesky,
-  garnet,
-  celo,
-  pgn,
-  zora,
-  optimismSepolia,
-  cyberTestnet,
-  zoraSepolia,
-  zoraTestnet,
   linea,
-  zetachain,
-  bob,
-  kroma,
-  cyber,
-  xLayer,
-  kava,
-  gravity,
-  zkFair,
-  coreDao,
-  zksync,
+  ArbitrumOne,
+  mantle,
+  BNBChain,
 ];
 export const config = defaultWagmiConfig({
   chains,

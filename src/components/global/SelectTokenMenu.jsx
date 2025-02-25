@@ -5,13 +5,33 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { BsChevronDown } from "react-icons/bs";
 import { FaCheck } from "react-icons/fa";
+import { useAccount } from "wagmi";
 
 const SelectTokenMenu = ({ selectedToken, setSelectedToken }) => {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const { chainId } = useAccount();
 
   const handleOpen = () => {
     setOpen(true);
+  };
+  // console.log(selectedToken);
+
+  const handleSelectToken = (item) => {
+    if (!item) return; // Ensure item is not undefined/null
+
+    const address =
+      item.addresses?.[chainId] || "0x0000000000000000000000000000000000000000";
+
+    setSelectedToken({
+      name: item.name,
+      symbol: item.symbol,
+      chainId: item.chainId,
+      address,
+      icon: item.metadata?.logoURI || "", // Ensure metadata and logoURI exist
+    });
+
+    setOpen(false);
   };
 
   const handleClickOutside = (e) => {
@@ -58,15 +78,7 @@ const SelectTokenMenu = ({ selectedToken, setSelectedToken }) => {
       >
         {zkTokens.map((item, index) => (
           <button
-            onClick={() => {
-              setOpen(false);
-              setSelectedToken({
-                name: item.name,
-                icon: item.metadata.logoURI,
-                symbol: item.symbol,
-                chainId: item.chainId,
-              });
-            }}
+            onClick={() => handleSelectToken(item)}
             key={index}
             className="w-full hover:bg-lightGray ease transition-all p-4 text-white flex justify-start items-center gap-3.5 text-base"
           >
@@ -77,7 +89,8 @@ const SelectTokenMenu = ({ selectedToken, setSelectedToken }) => {
               height={24}
             />
             <p>{item.symbol}</p>
-            {selectedToken?.chainId === item.chainId ? (
+            {selectedToken?.chainId === item.chainId &&
+            selectedToken?.symbol === item.symbol ? (
               <FaCheck className="ml-auto text-cyan" />
             ) : null}
           </button>

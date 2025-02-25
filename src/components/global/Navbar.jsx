@@ -10,9 +10,11 @@ import ConnectWalletModal from "../modals/ConnectWalletModal";
 import { CiMenuBurger } from "react-icons/ci";
 import UserMenu from "./UserMenu";
 import { ChainButton, ConnectorButton } from "./AccountButtons";
+import { useAccount } from "wagmi";
 
 const Navbar = () => {
   const pathname = usePathname();
+  const { isConnected } = useAccount();
   return (
     <nav className="md:pl-6 md:pr-4 md:pt-6 p-4 md:pb-0 bg-[#0F1110] border-b flex justify-between items-center font-poppins fixed top-0 right-0 left-0 z-20 border-borderLight backdrop-blur-sm">
       <div className="flex justify-start items-center gap-28 w-full font-poppins">
@@ -55,13 +57,17 @@ const Navbar = () => {
         <ChainButton />
       </div>
 
-      <div className="md:pb-6 px-3">
-        <ConnectorButton />
-      </div>
+      {isConnected && (
+        <div className="md:pb-6 px-3">
+          <ConnectorButton />
+        </div>
+      )}
 
-      <div className="md:pb-6">
-        <ConnectWalletModal />
-      </div>
+      {isConnected ? null : (
+        <div className="md:pb-6">
+          <ConnectWalletModal />
+        </div>
+      )}
       <UserMenu />
 
       <button className="md:hidden block text-white ml-3 hover:bg-cyan ease transition-all">
