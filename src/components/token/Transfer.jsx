@@ -5,7 +5,7 @@ import Image from "next/image";
 import SelectTokenMenu from "../global/SelectTokenMenu";
 import SelectChain from "../global/SelectChain";
 import { TbArrowsExchange } from "react-icons/tb";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TokenInput from "./TokenInput";
 import ReceipientAddressInput from "./ReceipientAddressInput";
 import { UseWallet } from "../useWallet";
@@ -13,13 +13,13 @@ import { useAccount } from "wagmi";
 import { ethers } from "ethers";
 import ConnectWalletModal2 from "../modals/ConnectWalletModal2";
 import SelectSourceChain from "../SelectSourceChain";
+import { chainImages } from "@/app/lib/network-images";
 
 const Transfer = () => {
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const { chainId, connector, address, isConnected } = useAccount();
+  const { chainId, connector, address, isConnected, chain } = useAccount();
   const { bridgeTokens } = UseWallet();
-
   const [amount, setAmount] = useState(null);
   const [receipientAddress, setReceipientAddress] = useState("");
   const [selectedToken, setSelectedToken] = useState({
@@ -37,6 +37,7 @@ const Transfer = () => {
     address: "0x455e53cbb86018ac2b8092fdcd39d8444affc3f6",
     icon: "https://www.zkbridge.com/assets/ethernet-3b0460d7.png",
   });
+
   const [selectedToChain, setSelectedToChain] = useState({
     name: "Polygon",
     chainId: 137,
@@ -44,6 +45,25 @@ const Transfer = () => {
     address: "0x455e53cbb86018ac2b8092fdcd39d8444affc3f6",
     icon: "https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png",
   });
+
+  // Hydration: The selectedFromchain shoul be exactly the current chain on the provider or connector
+  useEffect(() => {
+    if (chainId) {
+      if (selectedFromChain.chainId !== chainId) {
+        // switchChain({ chainId: 1, connector });
+        setSelectedFromChain((prev) => {
+          return {
+            ...prev,
+            chainId,
+            name: chain.name,
+            symbol: chain.nativeCurrency.symbol,
+            address: "",
+            icon: chainImages[chainId],
+          };
+        });
+      }
+    }
+  }, [chainId]);
 
   const handleBridge = async () => {
     try {
@@ -68,7 +88,7 @@ const Transfer = () => {
 
   return (
     <div className="w-full md:p-8 p-4 font-poppins relative rounded-2xl">
-      <div className="w-full flex justify-between items-center">
+      <div className="w-full flex justify-between sm:items-center flex-col-reverse sm:flex-row gap-4">
         <div className="flex justify-start items-center gap-3">
           <h2 className="font-semibold text-lg md:text-xl text-white">Token</h2>
           <SelectTokenMenu
@@ -77,17 +97,15 @@ const Transfer = () => {
           />
         </div>
         <div className="flex justify-start items-center gap-1">
-          <p className="text-cyan2 md:text-base text-sm lg:text-lg">
-            Secure, fast and low-fee
-          </p>
+          <p className="text-cyan2 text-lg">Secure, fast and low-fee</p>
           <Image src={double_star} alt="Double star" width={20} height={20} />
         </div>
       </div>
 
-      <div className="flex justify-between items-center gap-1 w-full mb-5 mt-8">
+      <div className="flex sm:flex-row flex-col justify-between items-center gap-1 w-full mb-5 mt-8">
         <SelectSourceChain
           label="From"
-          modalLabel="Select Sender Chain "
+          modalLabel="Select Sender Chain"
           selectedChain={selectedFromChain}
           setSelectedChain={setSelectedFromChain}
         />

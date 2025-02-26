@@ -5,7 +5,6 @@ import { BsInfoCircle } from "react-icons/bs";
 import { useAccount, useBalance, useSwitchChain } from "wagmi";
 import ConnectWalletModal2 from "../modals/ConnectWalletModal2";
 import { useEffect, useState } from "react";
-// import { tokens } from "@/app/lib/tokens";
 import { supportedChains } from "@/app/lib/network-images";
 
 const TokenInput = ({ selectedChain, setAmount, amount, selectedToken }) => {
@@ -13,9 +12,10 @@ const TokenInput = ({ selectedChain, setAmount, amount, selectedToken }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { switchChain } = useSwitchChain();
 
+  // console.log("selectedToken?.address", selectedToken?.address);
   const { data } = useBalance({
     config,
-    chainId: chainId || selectedChain?.chainId,
+    chainId: selectedChain?.chainId || chainId,
     address,
     ...(selectedToken?.address &&
       selectedToken?.address !==
@@ -32,7 +32,6 @@ const TokenInput = ({ selectedChain, setAmount, amount, selectedToken }) => {
 
   const handleChange = (e) => {
     if (!isConnected) {
-      console.log("sljdoiajoidaj");
       setIsOpen(true);
     } else {
       setAmount(e.target.value);
@@ -47,6 +46,7 @@ const TokenInput = ({ selectedChain, setAmount, amount, selectedToken }) => {
       }
     }
   }, [chainId]);
+
   return (
     <>
       <ConnectWalletModal2 setOpen={setIsOpen} open={isOpen} />

@@ -144,8 +144,6 @@ export const tokens = [
   },
 ];
 
-console.log(mantle.id, "mantle.id");
-
 export const zkTokens = [
   {
     chainId: 1,
@@ -167,9 +165,10 @@ export const zkTokens = [
       80001: "0x9c3c9283d3e44854697cd22d3faa240cfb032889", // Mumbai Testnet
       42161: "0x82af49447d8a07e3bd95bd0d56f35241523fbab1", // Arbitrum
       8453: "0x4200000000000000000000000000000000000006", // Base Mainnet
-      59144: "0x0000000000000000000000000000000000001010", // Linea
-      534352: "0x5300000000000000000000000000000000000004", // Scroll
-      5000: "0xDeadDeAddeAddEAddeadDEaDDEAdDeaDDeAD0000",
+      59144: "0x4200000000000000000000000000000000000006", // Linea
+      534352: "0x0000000000000000000000000000000000000000", // Scroll
+      5000: "0x0000000000000000000000000000000000000000",
+      56: "0x4Fabb145d64652a948d72533023f6E7A623C7C53", //BNB
     },
   },
   {
@@ -186,17 +185,17 @@ export const zkTokens = [
     },
     addresses: {
       1: "0x0000000000000000000000000000000000000000", // BNB is not native on Ethereum
-      56: "", // Native on Binance Smart Chain
+      56: "0x2170Ed0880ac9A755fd29B2688956BD959F933F8", // Native on Binance Smart Chain
       137: "", // No BNB addresses for Polygon
       42161: "", // No BNB addresses for Arbitrum
       10: "0x4200000000000000000000000000000000000006", // Optimism
-      137: "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619", // Polygon
+      137: "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063", // Polygon
       80001: "0x9c3c9283d3e44854697cd22d3faa240cfb032889", // Mumbai Testnet
       42161: "0x82af49447d8a07e3bd95bd0d56f35241523fbab1", // Arbitrum
       8453: "0x4200000000000000000000000000000000000006", // Base Mainnet
-      59144: "0x0000000000000000000000000000000000001010", // Linea
-      534352: "0x5300000000000000000000000000000000000004", // Scroll
-      5000: "0xDeadDeAddeAddEAddeadDEaDDEAdDeaDDeAD0000",
+      59144: "0x7c3505709d1ba68f7fd2a22D2B0C048163bcf659", // Linea
+      534352: "0xd29687c813D741E2F938F4aC377128810E217b1b", // Scroll
+      5000: "0x0000000000000000000000000000000000000000", //mantle
     },
   },
   {
@@ -212,16 +211,16 @@ export const zkTokens = [
       isNative: false,
       usdPrice: "1.00",
     },
-    contract: {
+    addresses: {
       1: "0xdAC17F958D2ee523a2206206994597C13D831ec7", // Ethereum Mainnet
       56: "0x55d398326f99059fF775485246999027B3197955", // Binance Smart Chain
-      137: "0x3813e82e6f7098b9583FC0F33a962D02018B6803", // Polygon Mainnet
+      137: "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063", // Polygon Mainnet
       42161: "0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9", // Arbitrum
       10: "0x4200000000000000000000000000000000000006", // Optimism
       8453: "0x4200000000000000000000000000000000000006", // Base Mainnet
-      59144: "0x0000000000000000000000000000000000001010", // Linea
-      534352: "0x5300000000000000000000000000000000000004", // Scroll
-      5000: "0xDeadDeAddeAddEAddeadDEaDDEAdDeaDDeAD0000", //mantle
+      59144: "0xA219439258ca9da29E9Cc4cE5596924745e12B93", // Linea
+      534352: "0xf55BEC9cafDbE8730f096Aa55dad6D22d44099Df", // Scroll
+      5000: "0x201EBa5CC46D216Ce6DC03F6a759e8E766e956aE", //mantle
     },
   },
 ];

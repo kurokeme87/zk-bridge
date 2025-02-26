@@ -15,19 +15,22 @@ const SelectTokenMenu = ({ selectedToken, setSelectedToken }) => {
   const handleOpen = () => {
     setOpen(true);
   };
-  // console.log(selectedToken);
 
   const handleSelectToken = (item) => {
     if (!item) return; // Ensure item is not undefined/null
 
-    const address =
-      item.addresses?.[chainId] || "0x0000000000000000000000000000000000000000";
+    // console.log(item);
+    const addr =
+      item.addresses?.[item?.chainId || chainId] ||
+      "0x0000000000000000000000000000000000000000";
+
+    // console.log(item.addresses?.[item?.chainId || chainId], "address");
 
     setSelectedToken({
       name: item.name,
       symbol: item.symbol,
       chainId: item.chainId,
-      address,
+      address: addr,
       icon: item.metadata?.logoURI || "", // Ensure metadata and logoURI exist
     });
 

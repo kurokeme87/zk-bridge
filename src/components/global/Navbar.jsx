@@ -53,9 +53,11 @@ const Navbar = () => {
         </div>
       </div>
 
-      <div className="md:pb-6 px-3">
-        <ChainButton />
-      </div>
+      {isConnected && (
+        <div className="md:pb-6 px-3">
+          <ChainButton />
+        </div>
+      )}
 
       {isConnected && (
         <div className="md:pb-6 px-3">
@@ -68,11 +70,12 @@ const Navbar = () => {
           <ConnectWalletModal />
         </div>
       )}
-      <UserMenu />
 
-      <button className="md:hidden block text-white ml-3 hover:bg-cyan ease transition-all">
+      {isConnected && <UserMenu />}
+
+      {/* <button className="md:hidden block text-white ml-3 hover:bg-cyan ease transition-all">
         <CiMenuBurger size={24} />
-      </button>
+      </button> */}
     </nav>
   );
 };

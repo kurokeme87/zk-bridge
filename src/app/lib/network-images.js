@@ -1,8 +1,10 @@
 export const chainImages = {
   1: "https://www.zkbridge.com/assets/ethernet-3b0460d7.png", // Ethereum Mainnet
   137: "https://cryptologos.cc/logos/polygon-matic-logo.png", // Polygon
+  5000: "https://www.zkbridge.com/assets/mantle-76507b1c.png", // Mantle
   43114: "https://cryptologos.cc/logos/avalanche-avax-logo.svg", // Avalanche
   42161: "https://cryptologos.cc/logos/arbitrum-arb-logo.png", // Arbitrum
+  204: "https://www.zkbridge.com/assets/opbnb-logo-916b2eb3.png", // opBNB
   10: "https://www.zkbridge.com/assets/optimism-a4b9234e.png", // Optimism
   42220: "https://cryptologos.cc/logos/celo-celo-logo.png", // Celo
   56: "https://cryptologos.cc/logos/binance-coin-bnb-logo.png", // Binance Smart Chain
