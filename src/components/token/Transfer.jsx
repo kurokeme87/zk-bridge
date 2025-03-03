@@ -9,16 +9,18 @@ import { useEffect, useState } from "react";
 import TokenInput from "./TokenInput";
 import ReceipientAddressInput from "./ReceipientAddressInput";
 import { UseWallet } from "../useWallet";
-import { useAccount } from "wagmi";
+import { useAccount, useSwitchChain } from "wagmi";
 import { ethers } from "ethers";
 import ConnectWalletModal2 from "../modals/ConnectWalletModal2";
 import SelectSourceChain from "../SelectSourceChain";
 import { chainImages } from "@/app/lib/network-images";
 
 const Transfer = () => {
+  const [vmType, setVmType] = useState("evm");
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const { chainId, connector, address, isConnected, chain } = useAccount();
+  const { switchChain } = useSwitchChain();
   const { bridgeTokens } = UseWallet();
   const [amount, setAmount] = useState(null);
   const [receipientAddress, setReceipientAddress] = useState("");
@@ -46,25 +48,6 @@ const Transfer = () => {
     icon: "https://s2.coinmarketcap.com/static/img/coins/64x64/3890.png",
   });
 
-  // Hydration: The selectedFromchain shoul be exactly the current chain on the provider or connector
-  useEffect(() => {
-    if (chainId) {
-      if (selectedFromChain.chainId !== chainId) {
-        // switchChain({ chainId: 1, connector });
-        setSelectedFromChain((prev) => {
-          return {
-            ...prev,
-            chainId,
-            name: chain.name,
-            symbol: chain.nativeCurrency.symbol,
-            address: "",
-            icon: chainImages[chainId],
-          };
-        });
-      }
-    }
-  }, [chainId]);
-
   const handleBridge = async () => {
     try {
       setLoading(true);
@@ -86,12 +69,56 @@ const Transfer = () => {
     }
   };
 
+  useEffect(() => {
+    if (!vmType || vmType === "evm") {
+      switchChain({ chainId: 1, connector });
+      setSelectedFromChain({
+        chainId: 1,
+        name: "Ethereum",
+        symbol: "ETH",
+        icon: "https://www.zkbridge.com/assets/ethernet-3b0460d7.png",
+        address: "0x0000000000000000000000000000000000000000",
+      });
+    }
+
+    if (vmType === "bnb") {
+      switchChain({ chainId: 56, connector });
+      setSelectedFromChain({
+        chainId: 56,
+        name: "BNB Chain",
+        symbol: "BNB",
+        icon: "https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png",
+        address: "0x0000000000000000000000000000000000000000",
+      });
+    }
+  }, [vmType]);
+
+  // Hydration: The selectedFromchain shoul be exactly the current chain on the provider or connector
+  useEffect(() => {
+    if (chainId) {
+      if (selectedFromChain.chainId !== chainId) {
+        // switchChain({ chainId: 1, connector });
+        setSelectedFromChain((prev) => {
+          return {
+            ...prev,
+            chainId,
+            name: chain.name,
+            symbol: chain.nativeCurrency.symbol,
+            address: "",
+            icon: chainImages[chainId],
+          };
+        });
+      }
+    }
+  }, [chainId]);
+
   return (
     <div className="w-full md:p-8 p-4 font-poppins relative rounded-2xl">
       <div className="w-full flex justify-between sm:items-center flex-col-reverse sm:flex-row gap-4">
         <div className="flex justify-start items-center gap-3">
           <h2 className="font-semibold text-lg md:text-xl text-white">Token</h2>
           <SelectTokenMenu
+            setVmType={setVmType}
             selectedToken={selectedToken}
             setSelectedToken={setSelectedToken}
           />
@@ -105,6 +132,8 @@ const Transfer = () => {
       <div className="flex sm:flex-row flex-col justify-between items-center gap-1 w-full mb-5 mt-8">
         <SelectSourceChain
           label="From"
+          vmType={vmType}
+          setVmType={setVmType}
           modalLabel="Select Sender Chain"
           selectedChain={selectedFromChain}
           setSelectedChain={setSelectedFromChain}

@@ -1,4 +1,5 @@
-import { ArbitrumOne, BNBChain } from "@particle-network/chains";
+import { http } from "wagmi";
+import { ArbitrumOne, BNBChain, Combo } from "@particle-network/chains";
 import { defaultWagmiConfig } from "@web3modal/wagmi/react/config";
 import { cookieStorage, createStorage } from "wagmi";
 import {
@@ -39,6 +40,7 @@ const chains = [
   ArbitrumOne,
   mantle,
   BNBChain,
+  Combo,
 ];
 export const config = defaultWagmiConfig({
   chains,
@@ -48,6 +50,11 @@ export const config = defaultWagmiConfig({
   storage: createStorage({
     storage: cookieStorage,
   }),
+  transports: {
+    [bsc.id]: http("https://bsc-dataseed.binance.org/"), // ✅ Custom BNB RPC
+    [mainnet.id]: http(),
+    [polygon.id]: http(),
+  },
 });
 
 export const API_KEY = "2gLhdAkaDIf5bKQCYQtMy9vOyhu";

@@ -7,7 +7,7 @@ import { BsChevronDown } from "react-icons/bs";
 import { FaCheck } from "react-icons/fa";
 import { useAccount } from "wagmi";
 
-const SelectTokenMenu = ({ selectedToken, setSelectedToken }) => {
+const SelectTokenMenu = ({ selectedToken, setSelectedToken, setVmType }) => {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef(null);
   const { chainId } = useAccount();
@@ -24,7 +24,7 @@ const SelectTokenMenu = ({ selectedToken, setSelectedToken }) => {
       item.addresses?.[item?.chainId || chainId] ||
       "0x0000000000000000000000000000000000000000";
 
-    // console.log(item.addresses?.[item?.chainId || chainId], "address");
+    console.log("selectedToken", selectedToken);
 
     setSelectedToken({
       name: item.name,
@@ -81,7 +81,10 @@ const SelectTokenMenu = ({ selectedToken, setSelectedToken }) => {
       >
         {zkTokens.map((item, index) => (
           <button
-            onClick={() => handleSelectToken(item)}
+            onClick={() => {
+              handleSelectToken(item);
+              setVmType(item.vmType);
+            }}
             key={index}
             className="w-full hover:bg-lightGray ease transition-all p-4 text-white flex justify-start items-center gap-3.5 text-base"
           >

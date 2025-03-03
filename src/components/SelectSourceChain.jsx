@@ -9,11 +9,15 @@ import { useAccount, useSwitchChain } from "wagmi";
 
 const SelectSourceChain = ({
   label,
+  vmType,
+  setVmType,
   modalLabel,
   selectedChain,
   setSelectedChain,
 }) => {
   const [open, setOpen] = useState(false);
+  // const [vmType, setVmType] = useState("evm");
+  const [filteredChains, setFilteredChains] = useState(brigeTokens[1]);
   const dropdownRef = useRef(null);
   const { switchChain } = useSwitchChain();
   const { address, connector } = useAccount();
@@ -27,6 +31,17 @@ const SelectSourceChain = ({
       setOpen(false);
     }
   };
+
+  useEffect(() => {
+    if (!vmType) return;
+
+    if (vmType === "bnb") {
+      setFilteredChains(brigeTokens[56]);
+    }
+    if (vmType === "evm") {
+      setFilteredChains(brigeTokens[1]);
+    }
+  }, [vmType]);
 
   useEffect(() => {
     document.addEventListener("mousedown", handleClickOutside);
@@ -76,20 +91,21 @@ const SelectSourceChain = ({
           open
             ? "translate-y-0 z-[90] top-[10%]"
             : "translate-y-[1000px] -z-50 invisible"
-        } flex flex-col justify-start rounded-t-3xl divide-y-[1px] left-0 right-0 top-0 bottom-0 divide-borderGrayLight border border-borderLight ease transition-all duration-300  absolute bg-[#151716] px-6 pt-10`}
+        } flex flex-col justify-start rounded-t-3xl left-0 right-0 top-0 bottom-0  ease transition-all duration-300  absolute bg-[#151716] px-6 pt-10`}
       >
         <div className="w-full flex justify-between items-center text-white">
-          <h2 className="text-2xl font-semibold">{modalLabel}</h2>
+          <h2 className="text-lg font-semibold">{modalLabel}</h2>
           <button onClick={() => setOpen(false)}>
             <BsChevronDown />
           </button>
         </div>
 
-        <div className="grid grid-cols-2 gap-x-7 gap-y-4 mt-10">
-          {zkChains.map((item, index) => (
+        <div className="grid grid-cols-2 gap-x-7 gap-y-2 mt-12">
+          {filteredChains.map((item, index) => (
             <button
               onClick={() => {
                 setOpen(false);
+                setVmType(item.vmType);
                 setSelectedChain({
                   name: item.name,
                   icon: item.metadata.logoURI,

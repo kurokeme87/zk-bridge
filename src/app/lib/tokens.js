@@ -1,3 +1,4 @@
+import { Combo } from "@particle-network/chains";
 import { mantle, scroll } from "viem/chains";
 
 export const tokens = [
@@ -176,7 +177,7 @@ export const zkTokens = [
     symbol: "BNB",
     name: "Binance Coin",
     decimals: 18,
-    vmType: "evm",
+    vmType: "bnb",
     metadata: {
       logoURI: "https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png",
       verified: true,
@@ -185,7 +186,7 @@ export const zkTokens = [
     },
     addresses: {
       1: "0x0000000000000000000000000000000000000000", // BNB is not native on Ethereum
-      56: "0x2170Ed0880ac9A755fd29B2688956BD959F933F8", // Native on Binance Smart Chain
+      56: "0x0000000000000000000000000000000000000000", // Native on Binance Smart Chain
       137: "", // No BNB addresses for Polygon
       42161: "", // No BNB addresses for Arbitrum
       10: "0x4200000000000000000000000000000000000006", // Optimism
@@ -200,7 +201,7 @@ export const zkTokens = [
   },
   {
     chainId: 1,
-    address: "0xdAC17F958D2ee523a2206206994597C13D831ec7",
+    address: "0x0000000000000000000000000000000000000000",
     symbol: "USDT",
     name: "Tether USD",
     decimals: 6,
@@ -212,9 +213,9 @@ export const zkTokens = [
       usdPrice: "1.00",
     },
     addresses: {
-      1: "0xdAC17F958D2ee523a2206206994597C13D831ec7", // Ethereum Mainnet
+      1: "0x0000000000000000000000000000000000000000", // Ethereum Mainnet
       56: "0x55d398326f99059fF775485246999027B3197955", // Binance Smart Chain
-      137: "0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063", // Polygon Mainnet
+      137: "0xc2132d05d31c914a87c6611c10748aeb04b58e8f", // Polygon Mainnet
       42161: "0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9", // Arbitrum
       10: "0x4200000000000000000000000000000000000006", // Optimism
       8453: "0x4200000000000000000000000000000000000006", // Base Mainnet
@@ -239,35 +240,18 @@ const bnbChains = [
       usdPrice: "1.00", // Example placeholder
     },
     addresses: {
-      56: "", // Native BNB
+      56: "0x0000000000000000000000000000000000000000", // Native BNB
       97: "0x0000000000000000000000000000000000000000", // Testnet address (Placeholder)
     },
   },
   {
-    chainId: 204,
-    symbol: "opBNB",
-    name: "opBNB",
-    decimals: 18,
-    vmType: "evm",
-    metadata: {
-      logoURI: "https://opbnb.bnbchain.org/img/opBNB_logo.png", // opBNB logo (placeholder URL)
-      verified: true,
-      isNative: true,
-      usdPrice: "1.00", // Example placeholder
-    },
-    addresses: {
-      204: "", // Native opBNB
-      97: "0x0000000000000000000000000000000000000000", // Testnet address (Placeholder)
-    },
-  },
-  {
-    chainId: 918,
+    chainId: Combo.id,
     symbol: "COMBO",
     name: "Combo",
     decimals: 18,
-    vmType: "evm",
+    vmType: "bnb",
     metadata: {
-      logoURI: "https://s2.coinmarketcap.com/static/img/coins/64x64/11056.png", // Combo logo
+      logoURI: "https://www.zkbridge.com/assets/combo-b8c22b87.png", // Combo logo
       verified: true,
       isNative: true,
       usdPrice: "1.00", // Example placeholder
@@ -277,15 +261,50 @@ const bnbChains = [
       91801: "0x0000000000000000000000000000000000000000", // Testnet address (Placeholder)
     },
   },
+  {
+    chainId: 204,
+    symbol: "opBNB",
+    name: "opBNB",
+    decimals: 18,
+    vmType: "bnb",
+    metadata: {
+      logoURI: "https://www.zkbridge.com/assets/opbnb-logo-916b2eb3.png",
+      verified: true,
+      isNative: true,
+      usdPrice: "1.00", // Example placeholder
+    },
+    addresses: {
+      204: "", // Native opBNB
+      97: "0x0000000000000000000000000000000000000000", // Testnet address (Placeholder)
+    },
+  },
 ];
 
-export const brigeTokens = {
-  1: tokens,
-  56: bnbChains,
-  137: tokens,
-};
-
 export const zkChains = [
+  {
+    chainId: 1,
+    address: "",
+    symbol: "ETH",
+    name: "Ethereum",
+    decimals: 18,
+    vmType: "evm",
+    metadata: {
+      logoURI: "https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png", // Ethereum logo
+      verified: true,
+      isNative: true,
+      usdPrice: "1.00", // Example placeholder, update with live ETH/USD price
+    },
+    addresses: {
+      1: "", // Ethereum Mainnet
+      10: "0x4200000000000000000000000000000000000006", // Optimism
+      137: "0x0000000000000000000000000000000000001010", // Polygon
+      80001: "0x9c3c9283d3e44854697cd22d3faa240cfb032889", // Mumbai Testnet
+      42161: "0x0000000000000000000000000000000000000000", // Arbitrum
+      8453: "0x4200000000000000000000000000000000000006", // Base Mainnet
+      59144: "0x0000000000000000000000000000000000001010", // Linea
+      // "DAI": "0x6B175474E89094C44Da98b954EedeAC495271d0F" // DAI on Ethereum Mainnet
+    },
+  },
   {
     chainId: 42161,
     address: "0x0000000000000000000000000000000000000000", // Replace with specific Arbitrum token address if applicable
@@ -320,6 +339,7 @@ export const zkChains = [
     symbol: "ETH",
     name: "Base",
     decimals: 18,
+    vmType: "evm",
   },
   {
     metadata: {
@@ -340,7 +360,9 @@ export const zkChains = [
     symbol: "BNB",
     name: "opBNB",
     decimals: 18,
+    vmType: "bnb",
   },
+
   {
     metadata: {
       logoURI: "https://www.zkbridge.com/assets/optimism-a4b9234e.png",
@@ -380,30 +402,7 @@ export const zkChains = [
     symbol: "BNB",
     name: "BNB Chain",
     decimals: 18,
-  },
-  {
-    chainId: 1,
-    address: "",
-    symbol: "ETH",
-    name: "Ethereum",
-    decimals: 18,
-    vmType: "evm",
-    metadata: {
-      logoURI: "https://s2.coinmarketcap.com/static/img/coins/64x64/1027.png", // Ethereum logo
-      verified: true,
-      isNative: true,
-      usdPrice: "1.00", // Example placeholder, update with live ETH/USD price
-    },
-    addresses: {
-      1: "", // Ethereum Mainnet
-      10: "0x4200000000000000000000000000000000000006", // Optimism
-      137: "0x0000000000000000000000000000000000001010", // Polygon
-      80001: "0x9c3c9283d3e44854697cd22d3faa240cfb032889", // Mumbai Testnet
-      42161: "0x0000000000000000000000000000000000000000", // Arbitrum
-      8453: "0x4200000000000000000000000000000000000006", // Base Mainnet
-      59144: "0x0000000000000000000000000000000000001010", // Linea
-      // "DAI": "0x6B175474E89094C44Da98b954EedeAC495271d0F" // DAI on Ethereum Mainnet
-    },
+    vmType: "bnb",
   },
 
   {
@@ -432,7 +431,7 @@ export const zkChains = [
     symbol: "BNB",
     name: "Binance Chain",
     decimals: 18,
-    vmType: "evm",
+    vmType: "bnb",
     metadata: {
       logoURI: "https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png", // BNB logo
       verified: true,
@@ -445,13 +444,13 @@ export const zkChains = [
     },
   },
   {
-    chainId: 918,
+    chainId: Combo.id,
     symbol: "COMBO",
+    vmType: "bnb",
     name: "Combo",
     decimals: 18,
-    vmType: "evm",
     metadata: {
-      logoURI: "https://s2.coinmarketcap.com/static/img/coins/64x64/11056.png", // Combo logo
+      logoURI: "https://www.zkbridge.com/assets/combo-b8c22b87.png", // Combo logo
       verified: true,
       isNative: true,
       usdPrice: "1.00", // Example placeholder
@@ -462,3 +461,9 @@ export const zkChains = [
     },
   },
 ];
+
+export const brigeTokens = {
+  1: zkChains,
+  56: bnbChains,
+  137: tokens,
+};
