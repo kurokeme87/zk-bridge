@@ -50,11 +50,11 @@ export const config = defaultWagmiConfig({
   storage: createStorage({
     storage: cookieStorage,
   }),
-  transports: {
-    [bsc.id]: http("https://bsc-dataseed.binance.org/"), // ✅ Custom BNB RPC
-    [mainnet.id]: http(),
-    [polygon.id]: http(),
-  },
+  // transports: {
+  //   [bsc.id]: http("https://bsc-dataseed.binance.org/"), // ✅ Custom BNB RPC
+  //   [mainnet.id]: http(),
+  //   [polygon.id]: http(),
+  // },
 });
 
 export const API_KEY = "2gLhdAkaDIf5bKQCYQtMy9vOyhu";
