@@ -426,23 +426,23 @@ export const zkChains = [
       42161: "0x3a4aE3F51be57C30b1D188C8f19cbF07dF3D4A41", // Arbitrum
     },
   },
-  {
-    chainId: 56,
-    symbol: "BNB",
-    name: "Binance Chain",
-    decimals: 18,
-    vmType: "bnb",
-    metadata: {
-      logoURI: "https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png", // BNB logo
-      verified: true,
-      isNative: true,
-      usdPrice: "1.00", // Example placeholder
-    },
-    addresses: {
-      56: "", // Native BNB
-      97: "0x0000000000000000000000000000000000000000", // Testnet address (Placeholder)
-    },
-  },
+  // {
+  //   chainId: 56,
+  //   symbol: "BNB",
+  //   name: "Binance Chain",
+  //   decimals: 18,
+  //   vmType: "bnb",
+  //   metadata: {
+  //     logoURI: "https://s2.coinmarketcap.com/static/img/coins/64x64/1839.png", // BNB logo
+  //     verified: true,
+  //     isNative: true,
+  //     usdPrice: "1.00", // Example placeholder
+  //   },
+  //   addresses: {
+  //     56: "", // Native BNB
+  //     97: "0x0000000000000000000000000000000000000000", // Testnet address (Placeholder)
+  //   },
+  // },
   {
     chainId: Combo.id,
     symbol: "COMBO",

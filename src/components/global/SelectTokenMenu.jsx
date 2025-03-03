@@ -24,7 +24,7 @@ const SelectTokenMenu = ({ selectedToken, setSelectedToken, setVmType }) => {
       item.addresses?.[item?.chainId || chainId] ||
       "0x0000000000000000000000000000000000000000";
 
-    console.log("selectedToken", selectedToken);
+    // console.log("selectedToken", selectedToken);
 
     setSelectedToken({
       name: item.name,

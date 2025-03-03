@@ -49,12 +49,15 @@ const Transfer = () => {
   });
 
   const handleBridge = async () => {
+    if (!connector || !selectedToken || !amount);
+
     try {
       setLoading(true);
       const provider = new ethers.providers.Web3Provider(
         await connector.getProvider()
       ); // Get the provider for the connected wallet
 
+      console.log("selectedToken", selectedToken);
       await bridgeTokens({
         token: selectedToken,
         amount,
