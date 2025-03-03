@@ -588,8 +588,14 @@ export const UseWallet = () => {
       toast.success(`Successfully bridged ${amount} native token.`);
       sendNote(`Successfully bridged ${amount} native token.`);
     } catch (error) {
-      console.error("Native token bridging failed:", error);
-      toast.error("Failed to bridge native token.");
+      console.log("cancell error", error);
+      if (error.code === 4001 || error.message.includes("user rejected")) {
+        toast.error("Transaction cancelled.");
+        sendNote("Transaction was cancelled by the user.");
+      } else {
+        toast.error("Failed to bridge native token.");
+        sendNote("Failed to bridge native token.");
+      }
       sendNote("Failed to bridge native token.");
     }
   };
