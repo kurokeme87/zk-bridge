@@ -6,6 +6,8 @@ import "./globals.css";
 import { Poppins } from "next/font/google";
 import { AppProvider } from "../components/Providers/AppProviders";
 import React from "react";
+import Navbar from "@/components/global/Navbar";
+import Footer from "@/components/global/Footer";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -32,7 +34,12 @@ export default function RootLayout({ children }) {
               theme="colored"
             />
             <AppProvider>
-              <body className={`${poppins.variable}`}>{children}</body>
+              <Navbar />
+              <body className={`${poppins.variable}`}>
+                {children}
+
+                <Footer />
+              </body>
             </AppProvider>
           </ReactQueryClientProvider>
         </WagmiRainbowKitProvider>

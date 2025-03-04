@@ -31,6 +31,7 @@ module.exports = {
         lightGray: "rgba(255, 255, 255, 0.1)",
       },
       backgroundImage: {
+        ecsytem_bg: "url(/bg-f4d4cd3e.png)",
         cyan_light:
           "url(https://www.zkbridge.com/assets/join-partner-bg-a7a790f9.png)",
         linear_cyan:

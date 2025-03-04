@@ -48,12 +48,12 @@ export const developers = [
 export const ecosystem = [
   {
     label: "Project",
-    link: "https://dl.acm.org/doi/10.1145/3548606.3560652",
+    link: "/ecosystem",
     icon: VscGithubProject,
   },
   {
     label: "Campaign",
-    link: "/zklightclient",
+    link: "/loyalty",
     icon: LuTicket,
   },
 ];

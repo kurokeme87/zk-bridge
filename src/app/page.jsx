@@ -2,12 +2,10 @@ import BuildWithZkBridge from "@/components/BuildWithZkBridge";
 import EcosystemSwiper from "@/components/EcosystemSwiper";
 import EfficientProof from "@/components/EfficientProof";
 import Footer from "@/components/global/Footer";
-import Navbar from "@/components/global/Navbar";
 import HeroSection from "@/components/HeroSection";
 import ProvingEthereum from "@/components/ProvingEthereum";
 import Link from "next/link";
 import { HiOutlineExternalLink } from "react-icons/hi";
-// import { tokens } from "./lib/tokens";
 import { supported_chains_img } from "./lib/data";
 import ApplicationUseCases from "@/components/ApplicationUseCases";
 import Advantages from "@/components/Advantages";
@@ -16,7 +14,6 @@ import AnimatedNav from "@/components/global/AnimatedNav";
 const Page = () => {
   return (
     <main className="w-full font-poppins">
-      <Navbar />
       <AnimatedNav />
       <HeroSection />
       <section className="min-h-screen h-full relative flex flex-col bg-black py-14 md:py-20">
