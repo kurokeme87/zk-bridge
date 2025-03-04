@@ -44,6 +44,7 @@ const Page = () => {
                     <div className="w-full flex justify-start items-center gap-2 mt-3">
                       {item.partnerTask.awards.map((award, idx) => (
                         <div
+                          key={idx}
                           className={`${
                             award.awardType === "points"
                               ? "points-bg points-div"
@@ -51,7 +52,6 @@ const Page = () => {
                           } p-2 border font-medium rounded-md`}
                         >
                           <p
-                            key={idx}
                             className={`${
                               award.awardType === "points" ? "points-bg" : ""
                             } text-xs`}
