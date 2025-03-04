@@ -2,6 +2,7 @@ import Link from "next/link";
 import { tasks } from "../lib/tasks";
 import { truncateText } from "@/components/helpers";
 import EcosystemsAlphabetical from "@/components/ecosystem/EcosystemsAlphabetical";
+import { MdArrowOutward } from "react-icons/md";
 
 const Page = () => {
   return (
@@ -102,10 +103,7 @@ const Page = () => {
         <span>
           <i>
             Join zkBridge Ecosystem
-            <img
-              src="/assets/Arrow_Up_Right_S-b442d109.svg"
-              alt="Join zkBridge Ecosystem"
-            />
+            <MdArrowOutward />
           </i>
         </span>
       </a>
