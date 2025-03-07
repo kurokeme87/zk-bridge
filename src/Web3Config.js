@@ -47,6 +47,7 @@ export const config = defaultWagmiConfig({
   projectId,
   metadata,
   ssr: true,
+  enableAutoConnect: false,
   storage: createStorage({
     storage: cookieStorage,
   }),
